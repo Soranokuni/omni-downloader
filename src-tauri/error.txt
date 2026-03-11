@@ -1,0 +1,52 @@
+    Checking app v0.1.0 (D:\Omni\omni-downloader\src-tauri)
+warning: error finalizing incremental compilation session directory `\\?\D:\Omni\omni-downloader\src-tauri\target\debug\incremental\app_lib-3mkq90v30tr4y\s-hgk9szvwqt-1kmbtoj-working`: Access is denied. (os error 5)
+
+warning: `app` (lib) generated 1 warning
+error[E0433]: failed to resolve: use of undeclared type `PathBuf`
+   --> src\mcp.rs:226:19
+    |
+226 |     let out_mxf = PathBuf::from(target_filename);
+    |                   ^^^^^^^ use of undeclared type `PathBuf`
+    |
+help: consider importing this struct
+    |
+  1 + use std::path::PathBuf;
+    |
+
+warning: unused import: `Context`
+ --> src\binaries.rs:2:14
+  |
+2 | use anyhow::{Context, Result};
+  |              ^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Context`
+ --> src\mcp.rs:1:22
+  |
+1 | use anyhow::{Result, Context};
+  |                      ^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+ --> src\mcp.rs:2:13
+  |
+2 | use serde::{Deserialize, Serialize};
+  |             ^^^^^^^^^^^  ^^^^^^^^^
+
+error[E0716]: temporary value dropped while borrowed
+  --> src\mcp.rs:76:67
+   |
+76 |                         let params = req.get("params").unwrap_or(&json!({}));
+   |                                                                   ^^^^^^^^^ - temporary value is freed at the end of this statement
+   |                                                                   |
+   |                                                                   creates a temporary value which is freed while still in use
+77 |                         let tool_name = params.get("name").and_then(Value::as_str).unwrap_or("");
+   |                                         ------ borrow later used here
+   |
+   = note: consider using a `let` binding to create a longer lived value
+   = note: this error originates in the macro `$crate::json_internal` which comes from the expansion of the macro `json` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+Some errors have detailed explanations: E0433, E0716.
+For more information about an error, try `rustc --explain E0433`.
+warning: `app` (bin "app") generated 3 warnings
+error: could not compile `app` (bin "app") due to 2 previous errors; 3 warnings emitted
