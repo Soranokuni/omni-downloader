@@ -22,3 +22,26 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ignore FFmpeg binaries and archives
+/src-tauri/binaries/**/ffmpeg*
+/src-tauri/binaries/**/ffprobe*
+/src-tauri/binaries/**/ffmpeg*.zip
+/src-tauri/binaries/**/ffmpeg*.tar*
+/src-tauri/binaries/**/ffmpeg*.7z
+/src-tauri/binaries/**/ffmpeg*.exe
+
+# Ignore yt-dlp binaries and archives
+/src-tauri/binaries/**/yt-dlp*
+/src-tauri/binaries/**/ytdlp*
+/src-tauri/binaries/**/yt-dlp*.zip
+/src-tauri/binaries/**/yt-dlp*.tar*
+/src-tauri/binaries/**/yt-dlp*.7z
+/src-tauri/binaries/**/yt-dlp*.exe
+/src-tauri/binaries/**/ytdlp*.zip
+/src-tauri/binaries/**/ytdlp*.tar*
+/src-tauri/binaries/**/ytdlp*.7z
+/src-tauri/binaries/**/ytdlp*.exe
+
+# Ignore NAS storage folder and everything inside it
+/src-tauri/nas_storage/
