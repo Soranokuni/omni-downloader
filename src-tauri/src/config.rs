@@ -72,7 +72,11 @@ fn preferred_downloads_dir() -> PathBuf {
 }
 
 fn default_nas_retention_path() -> String {
-    preferred_app_dir().join("nas_storage").to_string_lossy().to_string()
+    if cfg!(target_os = "linux") {
+        "/data/retention".to_string()
+    } else {
+        preferred_app_dir().join("nas_storage").to_string_lossy().to_string()
+    }
 }
 
 fn default_binaries_path() -> String {
@@ -80,7 +84,11 @@ fn default_binaries_path() -> String {
 }
 
 fn default_output_path() -> String {
-    preferred_downloads_dir().to_string_lossy().to_string()
+    if cfg!(target_os = "linux") {
+        "/data/ingest".to_string()
+    } else {
+        preferred_downloads_dir().to_string_lossy().to_string()
+    }
 }
 
 fn default_profile_name() -> String {

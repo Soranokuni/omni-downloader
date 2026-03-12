@@ -50,7 +50,18 @@ async fn start_download(
     
     // Fire it in background to not block Tauri IPC
     tauri::async_runtime::spawn(async move {
-        if let Err(error) = crate::core::execute_download_and_ingest(url, target_filename, profile_name, &cfg, Some(app_handle.clone())).await {
+        let progress_app = app_handle.clone();
+        let log_app = app_handle.clone();
+        let emitters = crate::core::ExecutionEmitters {
+            progress: Arc::new(move |payload| {
+                let _ = progress_app.emit("download-progress", payload);
+            }),
+            log: Arc::new(move |payload| {
+                let _ = log_app.emit("backend-log", payload);
+            }),
+        };
+
+        if let Err(error) = crate::core::execute_download_and_ingest(url, target_filename, profile_name, &cfg, Some(emitters)).await {
             logging::error(format!("download task failed: {}", error));
             let _ = app_handle.emit(
                 "backend-log",

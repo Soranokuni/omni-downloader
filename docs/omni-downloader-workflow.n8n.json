@@ -1,0 +1,271 @@
+{
+  "name": "Omni Downloader IMAP to LLM to Worker",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "pinData": {},
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c43b4e22-434f-49d8-893b-24ae63d2e6d1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1320,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "return [\n  {\n    json: {\n      from: 'Editorial Desk <desk@example.com>',\n      text: 'Please ingest this link: https://www.example.com/news/story',\n      html: '<p>Please ingest this link: <a href=\"https://www.example.com/news/story\">https://www.example.com/news/story</a></p>'\n    }\n  }\n];"
+      },
+      "id": "15d10d74-ac22-4a92-b713-d42278dc6d6f",
+      "name": "Mock Incoming Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1080,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mailbox": "INBOX",
+        "postProcessAction": "read",
+        "downloadAttachments": false,
+        "format": "simple",
+        "options": {
+          "customEmailConfig": "[\"UNSEEN\"]",
+          "trackLastMessageId": true
+        }
+      },
+      "id": "8f51a817-9757-403f-b2b7-ec4f0ca9c1de",
+      "name": "Email Trigger (IMAP)",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        -1320,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const results = [];\n\n$input.all().forEach((item, inputIndex) => {\n  const email = item.json;\n  const senderRaw = email.from?.text || email.from || '';\n  const senderName = senderRaw\n    .replace(/<[^>]+>/g, '')\n    .replace(/\\\"/g, '')\n    .trim() || 'unknown_sender';\n\n  const body = [email.text, email.html, email.snippet].filter(Boolean).join('\\n');\n  const urlPattern = /https?:\\/\\/[^\\s<>()\"']+/g;\n  const urls = [...new Set((body.match(urlPattern) || []).map((url) => url.replace(/[),.;]+$/, '')))];\n\n  urls.forEach((url, index) => {\n    results.push({\n      json: {\n        sender_name: senderName,\n        sender_raw: senderRaw,\n        source_email: email,\n        url,\n        order: index + 1,\n      },\n      pairedItem: {\n        item: inputIndex,\n      },\n    });\n  });\n});\n\nreturn results;"
+      },
+      "id": "ce2718ff-9bc6-41ce-a22a-f490feffb38e",
+      "name": "Extract Sender And URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -820,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "authentication": "none",
+        "sendHeaders": false,
+        "sendBody": false,
+        "response": {
+          "response": {
+            "responseFormat": "text",
+            "outputPropertyName": "html"
+          }
+        },
+        "options": {}
+      },
+      "id": "c32430a1-3935-41f0-9406-7bf7e146d53e",
+      "name": "Fetch Article HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -560,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const cheerio = require('cheerio');\n\nreturn $input.all().map((item, itemIndex) => {\n  const html = item.json.html || '';\n  const pageUrl = item.json.url;\n  const $ = cheerio.load(html);\n\n  const pageTitle = $('title').first().text() || $('h1').first().text();\n  const pageDescription = $('meta[name=\"description\"]').attr('content') || $('meta[property=\"og:description\"]').attr('content') || '';\n  const canonicalUrl = $('link[rel=\"canonical\"]').attr('href') || pageUrl;\n\n  const toAbsolute = (value) => {\n    try {\n      return new URL(value, pageUrl).toString();\n    } catch {\n      return value;\n    }\n  };\n\n  const extractedData = {\n    source_url: pageUrl,\n    canonical_url: canonicalUrl,\n    article_title: pageTitle.trim(),\n    article_description: pageDescription.trim(),\n    json_ld_scripts: [],\n    embedded_media: [],\n  };\n\n  $('script[type=\"application/ld+json\"]').each((i, el) => {\n    const content = $(el).html();\n    if (!content) {\n      return;\n    }\n\n    if (!content.includes('VideoObject') && !content.includes('contentUrl') && !content.includes('embedUrl')) {\n      return;\n    }\n\n    try {\n      extractedData.json_ld_scripts.push(JSON.parse(content));\n    } catch {\n      extractedData.json_ld_scripts.push({ raw_json_ld: content.substring(0, 4000) });\n    }\n  });\n\n  $('iframe, video').each((i, el) => {\n    let src = $(el).attr('src') || $(el).attr('data-src');\n    if (!src && el.tagName === 'video') {\n      src = $(el).find('source').first().attr('src');\n    }\n\n    if (src) {\n      let surroundingText = $(el).parent().text() || $(el).parent().parent().text();\n      surroundingText = surroundingText.replace(/\\s+/g, ' ').trim().substring(0, 300);\n      extractedData.embedded_media.push({\n        tag: el.tagName,\n        url: toAbsolute(src),\n        surrounding_text: surroundingText,\n      });\n    }\n  });\n\n  return {\n    json: {\n      ...item.json,\n      extracted_context: extractedData,\n    },\n    pairedItem: {\n      item: itemIndex,\n    },\n  };\n});"
+      },
+      "id": "af2f86b7-f508-4237-b1d1-d50b5307fab3",
+      "name": "Cheerio Context Extraction",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -300,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer REPLACE_WITH_LLM_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ ({ model: 'REPLACE_WITH_MODEL', temperature: 0.1, response_format: { type: 'json_object' }, messages: [ { role: 'system', content: 'You identify the single best downloadable media URL for newsroom ingest. Prefer the main article video, not ads, analytics, thumbnails, subtitles, or unrelated embeds. Return JSON only with this schema: {\"selected_url\":\"string\",\"confidence\":0.0,\"reason\":\"string\"}. If no reliable media URL exists, return {\"selected_url\":\"\",\"confidence\":0.0,\"reason\":\"no reliable media url found\"}.' }, { role: 'user', content: `Select the best direct or player media URL from this article context.\\n\\n${JSON.stringify($json.extracted_context)}` } ] }) }}",
+        "response": {
+          "response": {
+            "responseFormat": "json"
+          }
+        },
+        "options": {}
+      },
+      "id": "6a721dff-5d6e-490a-8eab-21653f41165e",
+      "name": "LLM Select Media URL",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const sourceItems = $('Cheerio Context Extraction').all();\n\nreturn $input.all().map((item, itemIndex) => {\n  const source = sourceItems[itemIndex]?.json || {};\n  const raw = item.json?.choices?.[0]?.message?.content || item.json?.output_text || item.json?.text || '';\n\n  let parsed;\n  try {\n    parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;\n  } catch {\n    throw new Error(`LLM response was not valid JSON: ${raw}`);\n  }\n\n  if (!parsed.selected_url || typeof parsed.selected_url !== 'string') {\n    throw new Error(`LLM did not return a usable selected_url: ${JSON.stringify(parsed)}`);\n  }\n\n  return {\n    json: {\n      ...source,\n      selected_url: parsed.selected_url,\n      llm_confidence: parsed.confidence ?? 0,\n      llm_reason: parsed.reason || '',\n      profile_name: 'Dalet XDCAM 50Mbps',\n      target_filename: `${String(source.order ?? itemIndex + 1).padStart(4, '0')}_${source.sender_name || 'unknown_sender'}`,\n    },\n    pairedItem: {\n      item: itemIndex,\n    },\n  };\n});"
+      },
+      "id": "85a8bbcc-89ca-467c-b626-3904b3b46573",
+      "name": "Validate LLM Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ 'omni-downloader download --json --url ' + JSON.stringify($json.selected_url) + ' --target-filename ' + JSON.stringify($json.target_filename) + ' --profile-name ' + JSON.stringify($json.profile_name) }}"
+      },
+      "id": "9e715b91-136d-4345-b1f1-451d04668f8f",
+      "name": "Download And Ingest",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        500,
+        240
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Mock Incoming Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Incoming Email": {
+      "main": [
+        [
+          {
+            "node": "Extract Sender And URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Extract Sender And URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Sender And URLs": {
+      "main": [
+        [
+          {
+            "node": "Fetch Article HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Article HTML": {
+      "main": [
+        [
+          {
+            "node": "Cheerio Context Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cheerio Context Extraction": {
+      "main": [
+        [
+          {
+            "node": "LLM Select Media URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Select Media URL": {
+      "main": [
+        [
+          {
+            "node": "Validate LLM Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate LLM Output": {
+      "main": [
+        [
+          {
+            "node": "Download And Ingest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.git
+.gitignore
+node_modules
+dist
+n8n_data
+out.txt
+src-tauri/target
+src-tauri/binaries
+src-tauri/nas_storage

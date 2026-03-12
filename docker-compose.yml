@@ -1,0 +1,24 @@
+services:
+  n8n-omni-downloader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: n8n-omni-downloader
+    ports:
+      - "5678:5678"
+    environment:
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-UTC}
+      TZ: ${GENERIC_TIMEZONE:-UTC}
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-false}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-change-me}
+      NODE_FUNCTION_ALLOW_EXTERNAL: cheerio
+      NODE_PATH: /usr/local/lib/node_modules
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+      - /mnt/storage/mxf_ingest:/data/ingest
+      - /mnt/storage/raw_retention:/data/retention
+    restart: unless-stopped

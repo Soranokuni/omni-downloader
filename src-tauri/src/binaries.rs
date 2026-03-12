@@ -3,13 +3,16 @@ use crate::logging;
 use anyhow::Result;
 use std::fs::{self, File};
 use std::io::Write;
+#[cfg(unix)]
+use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Duration;
 use tokio::time;
 
-const FFMPEG_URL: &str = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip";
-const YTDLP_URL: &str = "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp.exe";
+const WINDOWS_FFMPEG_URL: &str = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip";
+const WINDOWS_YTDLP_URL: &str = "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp.exe";
+const LINUX_YTDLP_URL: &str = "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp_linux";
 const MIN_YTDLP_SIZE_BYTES: u64 = 1_000_000;
 const MIN_FFMPEG_SIZE_BYTES: u64 = 10_000_000;
 
@@ -25,36 +28,45 @@ pub async fn ensure_binaries(config: &AppConfig) -> Result<()> {
         fs::create_dir_all(bin_dir)?;
     }
 
-    let yt_dlp_path = bin_dir.join("yt-dlp.exe");
+    let yt_dlp_path = bin_dir.join(yt_dlp_file_name());
     if !is_valid_ytdlp_binary(&yt_dlp_path) {
         logging::info("Downloading yt-dlp nightly...");
-        download_file(YTDLP_URL, &yt_dlp_path).await?;
+        download_file(ytdlp_download_url(), &yt_dlp_path).await?;
+        make_executable(&yt_dlp_path)?;
         if !is_valid_ytdlp_binary(&yt_dlp_path) {
             anyhow::bail!("Downloaded yt-dlp binary is invalid: {}", yt_dlp_path.display());
         }
         logging::info("yt-dlp downloaded.");
     }
 
-    let ffmpeg_path = bin_dir.join("ffmpeg.exe");
+    let ffmpeg_path = bin_dir.join(ffmpeg_file_name());
     if !is_valid_ffmpeg_binary(&ffmpeg_path) {
-        logging::info("Downloading FFmpeg...");
-        let zip_path = bin_dir.join("ffmpeg.zip");
-        download_file(FFMPEG_URL, &zip_path).await?;
-        logging::info("Extracting FFmpeg...");
-        extract_ffmpeg(&zip_path, bin_dir)?;
-        fs::remove_file(zip_path).ok();
-        if !is_valid_ffmpeg_binary(&ffmpeg_path) {
-            anyhow::bail!("Downloaded ffmpeg binary is invalid: {}", ffmpeg_path.display());
+        if let Some(ffmpeg_url) = ffmpeg_download_url() {
+            logging::info("Downloading FFmpeg...");
+            let zip_path = bin_dir.join("ffmpeg.zip");
+            download_file(ffmpeg_url, &zip_path).await?;
+            logging::info("Extracting FFmpeg...");
+            extract_ffmpeg(&zip_path, bin_dir)?;
+            fs::remove_file(zip_path).ok();
+            if !is_valid_ffmpeg_binary(&ffmpeg_path) {
+                anyhow::bail!("Downloaded ffmpeg binary is invalid: {}", ffmpeg_path.display());
+            }
+            logging::info("FFmpeg ready.");
+        } else if system_command_works("ffmpeg", "-version") {
+            logging::info("Using system ffmpeg; no bundled auto-download is configured for this platform.");
+        } else {
+            anyhow::bail!(
+                "No working ffmpeg executable found and bundled auto-download is unavailable on this platform."
+            );
         }
-        logging::info("FFmpeg ready.");
     }
 
     Ok(())
 }
 
 pub fn resolve_runtime_binaries(config: &AppConfig) -> Result<RuntimeBinaries> {
-    let bundled_ytdlp = Path::new(&config.binaries_path).join("yt-dlp.exe");
-    let bundled_ffmpeg = Path::new(&config.binaries_path).join("ffmpeg.exe");
+    let bundled_ytdlp = Path::new(&config.binaries_path).join(yt_dlp_file_name());
+    let bundled_ffmpeg = Path::new(&config.binaries_path).join(ffmpeg_file_name());
 
     let yt_dlp = if is_valid_ytdlp_binary(&bundled_ytdlp) {
         bundled_ytdlp
@@ -143,22 +155,72 @@ fn system_command_works(command: &str, arg: &str) -> bool {
 
 pub fn spawn_ytdlp_updater(config: AppConfig) {
     tokio::spawn(async move {
-        // Run every 3 days
         let mut interval = time::interval(Duration::from_secs(3 * 24 * 3600));
-        let yt_dlp_path = Path::new(&config.binaries_path).join("yt-dlp.exe");
-
-        // Skip the immediate first tick so startup does not update binaries while the app is running.
         interval.tick().await;
 
         loop {
             interval.tick().await;
-            if is_valid_ytdlp_binary(&yt_dlp_path) {
-                logging::info("Running yt-dlp nightly auto-update...");
-                let _ = Command::new(&yt_dlp_path)
-                    .arg("--update-to")
-                    .arg("nightly")
-                    .output();
-            }
+            let Ok(runtime_binaries) = resolve_runtime_binaries(&config) else {
+                logging::error("Skipping yt-dlp auto-update because no working binary is currently available.");
+                continue;
+            };
+
+            logging::info(format!(
+                "Running yt-dlp nightly auto-update using {}...",
+                runtime_binaries.yt_dlp.display()
+            ));
+            let _ = Command::new(&runtime_binaries.yt_dlp)
+                .arg("--update-to")
+                .arg("nightly")
+                .output();
         }
     });
+}
+
+fn yt_dlp_file_name() -> &'static str {
+    if cfg!(target_os = "windows") {
+        "yt-dlp.exe"
+    } else {
+        "yt-dlp"
+    }
+}
+
+fn ffmpeg_file_name() -> &'static str {
+    if cfg!(target_os = "windows") {
+        "ffmpeg.exe"
+    } else {
+        "ffmpeg"
+    }
+}
+
+fn ytdlp_download_url() -> &'static str {
+    if cfg!(target_os = "windows") {
+        WINDOWS_YTDLP_URL
+    } else {
+        LINUX_YTDLP_URL
+    }
+}
+
+fn ffmpeg_download_url() -> Option<&'static str> {
+    if cfg!(target_os = "windows") {
+        Some(WINDOWS_FFMPEG_URL)
+    } else {
+        None
+    }
+}
+
+fn make_executable(path: &Path) -> Result<()> {
+    #[cfg(unix)]
+    {
+        let mut permissions = fs::metadata(path)?.permissions();
+        permissions.set_mode(0o755);
+        fs::set_permissions(path, permissions)?;
+    }
+
+    #[cfg(not(unix))]
+    {
+        let _ = path;
+    }
+
+    Ok(())
 }

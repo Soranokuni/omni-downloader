@@ -46,19 +46,8 @@ pub async fn run_mcp_server(config: AppConfig) -> Result<()> {
                             "result": {
                                 "tools": [
                                     {
-                                        "name": "extract_article_media",
-                                        "description": "Extracts iframe media URL and summary from an article URL.",
-                                        "inputSchema": {
-                                            "type": "object",
-                                            "properties": {
-                                                "url": { "type": "string" }
-                                            },
-                                            "required": ["url"]
-                                        }
-                                    },
-                                    {
                                         "name": "download_and_ingest_dalet",
-                                        "description": "Downloads media from a direct link or article URL, then transcodes it using the selected profile.",
+                                        "description": "Downloads media from a direct or LLM-resolved URL, then transcodes it using the selected profile.",
                                         "inputSchema": {
                                             "type": "object",
                                             "properties": {
@@ -82,9 +71,6 @@ pub async fn run_mcp_server(config: AppConfig) -> Result<()> {
                         let tool_args = params.get("arguments").cloned().unwrap_or(json!({}));
 
                         let result = match tool_name {
-                            "extract_article_media" => {
-                                handle_extract_article_media(tool_args).await
-                            }
                             "download_and_ingest_dalet" => {
                                 handle_download_and_ingest_dalet(tool_args, &config).await
                             }
@@ -123,55 +109,6 @@ pub async fn run_mcp_server(config: AppConfig) -> Result<()> {
     Ok(())
 }
 
-async fn handle_extract_article_media(args: Value) -> Value {
-    let url = match args.get("url").and_then(Value::as_str) {
-        Some(u) => u,
-        None => return json!({ "isError": true, "content": [{"type": "text", "text": "Missing 'url' argument"}] }),
-    };
-
-    match fetch_and_parse_article(url).await {
-        Ok((iframe_src, title)) => {
-            json!({
-                "content": [
-                    { "type": "text", "text": format!("Found iframe: {}\nSummary Title: {}", iframe_src, title) }
-                ]
-            })
-        }
-        Err(e) => {
-            logging::error(format!("Error extracting media: {}", e));
-            json!({ "isError": true, "content": [{"type": "text", "text": format!("Error extracting media: {}", e)}] })
-        }
-    }
-}
-
-async fn fetch_and_parse_article(url: &str) -> Result<(String, String)> {
-    let html = reqwest::get(url).await?.text().await?;
-    let document = scraper::Html::parse_document(&html);
-    
-    let h1_selector = scraper::Selector::parse("h1").unwrap();
-    let iframe_selector = scraper::Selector::parse("iframe").unwrap();
-    
-    let title = document.select(&h1_selector).next()
-        .map(|node| node.text().collect::<Vec<_>>().join(" "))
-        .unwrap_or_else(|| "Unknown Title".to_string());
-        
-    let mut best_iframe = String::new();
-    for node in document.select(&iframe_selector) {
-        if let Some(src) = node.value().attr("src") {
-            // Assume the first iframe is the primary video for this basic implementation.
-            // In a real scenario, we might match the src or class against the title.
-            best_iframe = src.to_string();
-            break;
-        }
-    }
-    
-    if best_iframe.is_empty() {
-        anyhow::bail!("No iframe found in the article.");
-    }
-    
-    Ok((best_iframe, title))
-}
-
 async fn handle_download_and_ingest_dalet(args: Value, config: &AppConfig) -> Value {
     let url = match args.get("url").and_then(Value::as_str) {
         Some(u) => u,
@@ -190,7 +127,7 @@ async fn handle_download_and_ingest_dalet(args: Value, config: &AppConfig) -> Va
     };
 
     match crate::core::execute_download_and_ingest(url.to_string(), target_filename, profile_name, config, None).await {
-        Ok(msg) => json!({ "content": [{"type": "text", "text": msg }] }),
+        Ok(execution) => json!({ "content": [{"type": "text", "text": execution.summary() }] }),
         Err(e) => {
             logging::error(format!("MCP download execution failed: {}", e));
             json!({ "isError": true, "content": [{"type": "text", "text": format!("Execution failed: {}", e)}] })

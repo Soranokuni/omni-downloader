@@ -1,0 +1,296 @@
+cargo:rerun-if-changed=build.rs
+cargo:rerun-if-env-changed=LZMA_API_STATIC
+cargo:root=D:\Omni\omni-downloader\worker\target\debug\build\liblzma-sys-8549958aec9bfc51\out
+cargo:include=C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz/src/liblzma/api
+OUT_DIR = Some(D:\Omni\omni-downloader\worker\target\debug\build\liblzma-sys-8549958aec9bfc51\out)
+OPT_LEVEL = Some(0)
+TARGET = Some(aarch64-pc-windows-msvc)
+CARGO_ENCODED_RUSTFLAGS = Some()
+cargo:rerun-if-env-changed=VCINSTALLDIR
+VCINSTALLDIR = None
+cargo:rerun-if-env-changed=VSTEL_MSBuildProjectFullPath
+VSTEL_MSBuildProjectFullPath = None
+cargo:rerun-if-env-changed=VCToolsVersion
+VCToolsVersion = None
+cargo:rerun-if-env-changed=VSCMD_ARG_VCVARS_SPECTRE
+VSCMD_ARG_VCVARS_SPECTRE = None
+cargo:rerun-if-env-changed=WindowsSdkDir
+WindowsSdkDir = None
+cargo:rerun-if-env-changed=WindowsSDKVersion
+WindowsSDKVersion = None
+cargo:rerun-if-env-changed=LIB
+LIB = None
+PATH = Some(D:\Omni\omni-downloader\worker\target\debug\deps;D:\Omni\omni-downloader\worker\target\debug;C:\Users\Shado\.rustup\toolchains\stable-aarch64-pc-windows-msvc\lib\rustlib\aarch64-pc-windows-msvc\lib;C:\Program Files\PowerShell\7;c:\Users\Shado\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\Shado\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;C:\Users\Shado\AppData\Local\Programs\Microsoft VS Code;C:\libwebp\bin;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft\jdk-21.0.8.9-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Program Files\PowerShell\7;C:\Program Files (x86)\Qualcomm\QIKTool\1.0.164.0;C:\Vive;C:\platform-tools;C:\Program Files\PuTTY;C:\Program Files\dotnet;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Users\Shado\AppData\Local\Android\Sdk;C:\Users\Shado\AppData\Local\Android\Sdk\platform-tools;C:\Users\Shado\AppData\Local\Android\Sdk\emulator;C:\Users\Shado\AppData\Local\Android\Sdk\tools;C:\Users\Shado\AppData\Local\Android\Sdk\tools\bin;C:\Program Files (x86)\Qualcomm\QIKToolV3\3.0.41.1;C:\Program Files (x86)\Qualcomm\QPM-CLI\1.0.121.0;C:\Program Files (x86)\ADB & Fastboot++\;C:\Program Files\nodejs\;C:\Program Files\dotnet\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\YTDLP-Downloader\bin;C:\Program Files\GitHub CLI\;C:\Program Files\CMake\bin;C:\Program Files\Calibre2\;C:\Program Files\PowerToys\DSCModules\;C:\Program Files\Go\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Users\Shado\.pyenv\pyenv-win\bin;C:\Users\Shado\.pyenv\pyenv-win\shims;C:\Users\Shado\.cargo\bin;C:\Users\Shado\AppData\Local\Programs\Python\Python310\Scripts;C:\Users\Shado\AppData\Local\Programs\Python\Python310;C:\Users\Shado\AppData\Local\Programs\Python\Python313-arm64\Scripts\;C:\Users\Shado\AppData\Local\Programs\Python\Python313-arm64\;C:\Users\Shado\AppData\Local\Programs\Python\Launcher\;C:\Users\Shado\AppData\Local\Programs\Python\Python313-arm64\Scripts;C:\Users\Shado\AppData\Local\Programs\Python\Python313-arm64;C:\Users\Shado\AppData\Local\Programs\Python\Launcher;C:\Users\Shado\AppData\Local\Microsoft\WindowsApps;C:\Users\Shado\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Shado\AppData\Local\spicetify;C:\Program Files\JetBrains\IntelliJ IDEA 2025.1\bin;C:\Users\Shado\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\Shado\.dotnet\tools;C:\Users\Shado\AppData\Roaming\npm;C:\Flutter\flutter\bin;C:\Users\Shado\.lmstudio\bin;C:\Users\Shado\AppData\Local\Microsoft\WindowsApps;C:\Users\Shado\AppData\Local\Programs\Antigravity\bin;C:\Flutter\bin;C:\Users\Shado\go\bin;;C:\Users\Shado\.rustup\toolchains\stable-aarch64-pc-windows-msvc\bin)
+cargo:rerun-if-env-changed=INCLUDE
+INCLUDE = None
+HOST = Some(aarch64-pc-windows-msvc)
+cargo:rerun-if-env-changed=CC_aarch64-pc-windows-msvc
+CC_aarch64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=CC_aarch64_pc_windows_msvc
+CC_aarch64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=HOST_CC
+HOST_CC = None
+cargo:rerun-if-env-changed=CC
+CC = None
+cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+CRATE_CC_NO_DEFAULTS = None
+CARGO_CFG_TARGET_FEATURE = Some(neon)
+DEBUG = Some(true)
+cargo:rerun-if-env-changed=CFLAGS
+CFLAGS = None
+cargo:rerun-if-env-changed=HOST_CFLAGS
+HOST_CFLAGS = None
+cargo:rerun-if-env-changed=CFLAGS_aarch64_pc_windows_msvc
+CFLAGS_aarch64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=CFLAGS_aarch64-pc-windows-msvc
+CFLAGS_aarch64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+tuklib_cpucores.c
+tuklib_physmem.c
+check.c
+crc32_fast.c
+crc64_fast.c
+sha256.c
+alone_decoder.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\lz\lz_decoder.h(208): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+alone_encoder.c
+auto_decoder.c
+block_buffer_decoder.c
+block_buffer_encoder.c
+block_decoder.c
+xz/src/liblzma/common\block_buffer_encoder.c(146): warning C4267: '=': conversion from 'size_t' to 'uint8_t', possible loss of data
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+block_encoder.c
+block_header_encoder.c
+block_util.c
+block_header_decoder.c
+xz/src/liblzma/common\block_encoder.c(150): warning C4100: 'filters': unreferenced formal parameter
+xz/src/liblzma/common\block_header_encoder.c(84): warning C4267: '=': conversion from 'size_t' to 'uint8_t', possible loss of data
+common.c
+easy_buffer_encoder.c
+easy_decoder_memusage.c
+easy_encoder.c
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+easy_encoder_memusage.c
+easy_preset.c
+file_info.c
+xz/src/liblzma/common\file_info.c(254): warning C4100: 'action': unreferenced formal parameter
+xz/src/liblzma/common\file_info.c(253): warning C4100: 'out_size': unreferenced formal parameter
+xz/src/liblzma/common\file_info.c(252): warning C4100: 'out_pos': unreferenced formal parameter
+xz/src/liblzma/common\file_info.c(251): warning C4100: 'out': unreferenced formal parameter
+filter_buffer_decoder.c
+filter_buffer_encoder.c
+filter_common.c
+filter_decoder.c
+filter_encoder.c
+filter_flags_encoder.c
+filter_flags_decoder.c
+hardware_cputhreads.c
+hardware_physmem.c
+index.c
+xz/src/liblzma/common\index.c(102): warning C4200: nonstandard extension used: zero-sized array in struct/union
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+index_decoder.c
+index_encoder.c
+index_hash.c
+lzip_decoder.c
+microlzma_decoder.c
+xz/src/liblzma/common\index_decoder.c(62): warning C4100: 'action': unreferenced formal parameter
+xz/src/liblzma/common\index_decoder.c(61): warning C4100: 'out_size': unreferenced formal parameter
+xz/src/liblzma/common\index_decoder.c(60): warning C4100: 'out_pos': unreferenced formal parameter
+xz/src/liblzma/common\index_decoder.c(59): warning C4100: 'out': unreferenced formal parameter
+outqueue.c
+xz/src/liblzma/common\index_encoder.c(50): warning C4100: 'action': unreferenced formal parameter
+xz/src/liblzma/common\index_encoder.c(47): warning C4100: 'in_size': unreferenced formal parameter
+xz/src/liblzma/common\index_encoder.c(46): warning C4100: 'in_pos': unreferenced formal parameter
+xz/src/liblzma/common\index_encoder.c(45): warning C4100: 'in': unreferenced formal parameter
+xz/src/liblzma/common\index_encoder.c(44): warning C4100: 'allocator': unreferenced formal parameter
+microlzma_encoder.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\lz\lz_decoder.h(208): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/common\lzip_decoder.c(341): warning C4100: 'coder_ptr': unreferenced formal parameter
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\common\outqueue.h(69): warning C4200: nonstandard extension used: zero-sized array in struct/union
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+stream_buffer_decoder.c
+stream_buffer_encoder.c
+stream_decoder.c
+stream_encoder.c
+stream_flags_common.c
+stream_flags_encoder.c
+stream_flags_decoder.c
+string_conversion.c
+xz/src/liblzma/common\stream_flags_encoder.c(68): warning C4244: 'function': conversion from 'const lzma_vli' to 'uint32_t', possible loss of data
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+vli_decoder.c
+vli_encoder.c
+vli_size.c
+delta_common.c
+delta_decoder.c
+delta_encoder.c
+lz_decoder.c
+lz_encoder.c
+xz/src/liblzma/delta\delta_encoder.c(97): warning C4100: 'filters_null': unreferenced formal parameter
+xz/src/liblzma/delta\delta_encoder.c(129): warning C4244: '=': conversion from 'const uint32_t' to 'uint8_t', possible loss of data
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\lz\lz_decoder.h(208): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(110): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(202): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(205): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(223): warning C4267: '+=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(236): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(237): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(254): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(311): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(218): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lz\lz_encoder.c(509): warning C4100: 'filters_null': unreferenced formal parameter
+fastpos_table.c
+lz_encoder_mf.c
+lzma2_decoder.c
+lzma2_encoder.c
+lzma_decoder.c
+lzma_encoder.c
+lzma_encoder_optimum_normal.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\lz\lz_decoder.h(208): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lzma\lzma2_decoder.c(228): warning C4100: 'id': unreferenced formal parameter
+xz/src/liblzma/lzma\lzma2_encoder.c(84): warning C4267: '+=': conversion from 'size_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/lzma\lzma2_encoder.c(90): warning C4267: '=': conversion from 'size_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/lzma\lzma2_encoder.c(125): warning C4267: '=': conversion from 'size_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/lzma\lzma2_encoder.c(168): warning C4267: 'initializing': conversion from 'size_t' to 'const uint32_t', possible loss of data
+xz/src/liblzma/lzma\lzma2_encoder.c(309): warning C4100: 'id': unreferenced formal parameter
+xz/src/liblzma/lzma\lzma2_encoder.c(397): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+lzma_encoder_optimum_fast.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\lz\lz_decoder.h(208): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/lzma\lzma_decoder.c(381): warning C4244: 'function': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/lzma\lzma_decoder.c(745): warning C4244: 'function': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/lzma\lzma_encoder.c(756): warning C4244: '=': conversion from 'const uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/lzma\lzma_decoder.c(1206): warning C4244: '-=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+lzma_encoder_presets.c
+price_table.c
+arm.c
+arm64.c
+ia64.c
+armthumb.c
+powerpc.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\arm.c(38): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/simple\arm.c(39): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/simple\arm.c(40): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/simple\arm.c(17): warning C4100: 'simple': unreferenced formal parameter
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\arm64.c(27): warning C4100: 'simple': unreferenced formal parameter
+riscv.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\ia64.c(17): warning C4100: 'simple': unreferenced formal parameter
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\armthumb.c(45): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/simple\armthumb.c(47): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/simple\armthumb.c(17): warning C4100: 'simple': unreferenced formal parameter
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\powerpc.c(42): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/simple\powerpc.c(43): warning C4244: '=': conversion from 'uint32_t' to 'uint8_t', possible loss of data
+xz/src/liblzma/simple\powerpc.c(17): warning C4100: 'simple': unreferenced formal parameter
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\riscv.c(355): warning C4100: 'is_encoder': unreferenced formal parameter
+xz/src/liblzma/simple\riscv.c(353): warning C4100: 'simple': unreferenced formal parameter
+xz/src/liblzma/simple\riscv.c(636): warning C4100: 'is_encoder': unreferenced formal parameter
+xz/src/liblzma/simple\riscv.c(634): warning C4100: 'simple': unreferenced formal parameter
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+simple_coder.c
+simple_decoder.c
+simple_encoder.c
+sparc.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\simple_coder.c(62): warning C4267: '+=': conversion from 'size_t' to 'uint32_t', possible loss of data
+xz/src/liblzma/simple\simple_coder.c(224): warning C4100: 'filters_null': unreferenced formal parameter
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+xz/src/liblzma/simple\sparc.c(17): warning C4100: 'simple': unreferenced formal parameter
+x86.c
+C:\Users\Shado\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\liblzma-sys-0.4.5\xz\src\liblzma\simple\simple_private.h(61): warning C4200: nonstandard extension used: zero-sized array in struct/union
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+exit code: 0
+cargo:rerun-if-env-changed=AR_aarch64-pc-windows-msvc
+AR_aarch64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=AR_aarch64_pc_windows_msvc
+AR_aarch64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=HOST_AR
+HOST_AR = None
+cargo:rerun-if-env-changed=AR
+AR = None
+cargo:rerun-if-env-changed=ARFLAGS
+ARFLAGS = None
+cargo:rerun-if-env-changed=HOST_ARFLAGS
+HOST_ARFLAGS = None
+cargo:rerun-if-env-changed=ARFLAGS_aarch64_pc_windows_msvc
+ARFLAGS_aarch64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=ARFLAGS_aarch64-pc-windows-msvc
+ARFLAGS_aarch64-pc-windows-msvc = None
+cargo:rustc-link-search=native=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\atlmfc\lib\arm64
+cargo:rustc-link-lib=static=lzma
+cargo:rustc-link-search=native=D:\Omni\omni-downloader\worker\target\debug\build\liblzma-sys-8549958aec9bfc51\out
